@@ -62,20 +62,20 @@ export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) 
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-[0_20px_60px_-10px_rgba(0,0,0,0.18)] animate-slide-up">
+      <div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-[0_20px_60px_-10px_rgba(0,0,0,0.18)] animate-slide-up">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div>
-            <h2 className="text-base font-bold text-slate-900">
+            <h2 className="text-base font-bold text-text">
               {isEditing ? 'Edit Task' : 'New Task'}
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-text-secondary mt-0.5">
               {isEditing ? 'Update the task details below' : 'Fill in the details to create a task'}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all duration-150"
+            className="p-2 rounded-lg text-text-secondary hover:text-text-secondary hover:bg-slate-100 dark:bg-slate-800 transition-all duration-150"
           >
             <X size={17} />
           </button>
@@ -102,7 +102,7 @@ export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) 
               {errors.title ? (
                 <p className="text-xs text-red-600">{errors.title}</p>
               ) : <span />}
-              <span className="text-xs text-slate-400">{form.title.length}/100</span>
+              <span className="text-xs text-text-secondary">{form.title.length}/100</span>
             </div>
           </div>
 
@@ -122,7 +122,7 @@ export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) 
               {errors.description ? (
                 <p className="text-xs text-red-600">{errors.description}</p>
               ) : <span />}
-              <span className="text-xs text-slate-400">{form.description.length}/500</span>
+              <span className="text-xs text-text-secondary">{form.description.length}/500</span>
             </div>
           </div>
 
@@ -133,9 +133,9 @@ export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) 
               {['low', 'medium', 'high'].map((p) => {
                 const active = form.priority === p;
                 const styles = {
-                  low:    active ? 'bg-slate-100 border-slate-400 text-slate-800 font-semibold' : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50',
-                  medium: active ? 'bg-blue-50 border-blue-500 text-blue-700 font-semibold' : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50',
-                  high:   active ? 'bg-red-50 border-red-400 text-red-700 font-semibold' : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:bg-slate-50',
+                  low:    active ? 'bg-slate-100 dark:bg-slate-800 border-slate-400 text-text font-semibold' : 'border-border text-text-secondary hover:border-border hover:bg-slate-50 dark:bg-slate-800/50',
+                  medium: active ? 'bg-blue-50 border-blue-500 text-blue-700 font-semibold' : 'border-border text-text-secondary hover:border-border hover:bg-slate-50 dark:bg-slate-800/50',
+                  high:   active ? 'bg-red-50 border-red-400 text-red-700 font-semibold' : 'border-border text-text-secondary hover:border-border hover:bg-slate-50 dark:bg-slate-800/50',
                 };
                 return (
                   <button

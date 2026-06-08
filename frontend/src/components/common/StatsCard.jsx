@@ -1,25 +1,25 @@
 export default function StatsCard({ label, value, icon: Icon, color }) {
   const configs = {
     indigo: {
-      card: 'bg-white border-slate-200',
+      card: 'bg-card border-border',
       iconWrap: 'bg-indigo-50',
       icon: 'text-indigo-600',
-      value: 'text-slate-900',
-      label: 'text-slate-500',
+      value: 'text-text',
+      label: 'text-text-secondary',
     },
     amber: {
-      card: 'bg-white border-slate-200',
+      card: 'bg-card border-border',
       iconWrap: 'bg-amber-50',
       icon: 'text-amber-600',
-      value: 'text-slate-900',
-      label: 'text-slate-500',
+      value: 'text-text',
+      label: 'text-text-secondary',
     },
     emerald: {
-      card: 'bg-white border-slate-200',
+      card: 'bg-card border-border',
       iconWrap: 'bg-emerald-50',
       icon: 'text-emerald-600',
-      value: 'text-slate-900',
-      label: 'text-slate-500',
+      value: 'text-text',
+      label: 'text-text-secondary',
     },
   };
 

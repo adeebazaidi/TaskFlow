@@ -86,17 +86,17 @@ export default function Dashboard() {
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-background">
       <Navbar />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 animate-fade-in">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-bold text-text tracking-tight">
               {greeting}, {user?.name?.split(' ')[0]} 👋
             </h2>
-            <p className="text-slate-500 text-sm mt-1.5">
+            <p className="text-text-secondary text-sm mt-1.5">
               {stats.pending > 0
                 ? `You have ${stats.pending} pending task${stats.pending !== 1 ? 's' : ''} to complete.`
                 : stats.total > 0
@@ -113,7 +113,7 @@ export default function Dashboard() {
                 if (filters.priority) params.priority = filters.priority;
                 fetchTasks(params);
               }}
-              className="p-2.5 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
+              className="p-2.5 rounded-xl border border-border bg-card text-text-secondary hover:text-text hover:bg-slate-50 dark:bg-slate-800/50 hover:border-border transition-all shadow-sm"
               title="Refresh"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />

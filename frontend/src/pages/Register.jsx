@@ -59,7 +59,7 @@ export default function Register() {
   const strength = passwordStrength();
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 relative overflow-hidden">
       {/* Subtle background accents */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-48 -right-48 w-96 h-96 bg-indigo-100/60 rounded-full blur-3xl" />
@@ -72,12 +72,12 @@ export default function Register() {
           <div className="w-11 h-11 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 mb-4">
             <CheckSquare size={22} className="text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Create your account</h1>
-          <p className="text-slate-500 text-sm mt-1.5">Start managing tasks for free</p>
+          <h1 className="text-2xl font-bold text-text tracking-tight">Create your account</h1>
+          <p className="text-text-secondary text-sm mt-1.5">Start managing tasks for free</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-7 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08)]">
+        <div className="bg-card border border-border rounded-2xl p-7 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08)]">
           {serverError && (
             <div className="mb-5 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm animate-fade-in flex items-start gap-2">
               <span className="mt-0.5">⚠</span>
@@ -90,7 +90,7 @@ export default function Register() {
             <div>
               <label className="label">Full name</label>
               <div className="relative">
-                <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
                 <input
                   type="text"
                   name="name"
@@ -108,7 +108,7 @@ export default function Register() {
             <div>
               <label className="label">Email address</label>
               <div className="relative">
-                <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
                 <input
                   type="email"
                   name="email"
@@ -126,7 +126,7 @@ export default function Register() {
             <div>
               <label className="label">Password</label>
               <div className="relative">
-                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
@@ -139,7 +139,7 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((s) => !s)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-secondary transition-colors"
                 >
                   {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
@@ -147,13 +147,13 @@ export default function Register() {
               {errors.password && <p className="mt-1.5 text-xs text-red-600">{errors.password}</p>}
               {strength && !errors.password && (
                 <div className="mt-2.5">
-                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div
                       className={`h-full ${strength.color} rounded-full transition-all duration-300`}
                       style={{ width: strength.width }}
                     />
                   </div>
-                  <p className="text-xs text-slate-500 mt-1 font-medium">{strength.label}</p>
+                  <p className="text-xs text-text-secondary mt-1 font-medium">{strength.label}</p>
                 </div>
               )}
             </div>
@@ -162,7 +162,7 @@ export default function Register() {
             <div>
               <label className="label">Confirm password</label>
               <div className="relative">
-                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="confirmPassword"
@@ -193,12 +193,12 @@ export default function Register() {
           </form>
 
           <div className="flex items-center gap-3 my-5">
-            <div className="flex-1 h-px bg-slate-100" />
-            <span className="text-xs text-slate-400 font-medium">OR</span>
-            <div className="flex-1 h-px bg-slate-100" />
+            <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
+            <span className="text-xs text-text-secondary font-medium">OR</span>
+            <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
           </div>
 
-          <p className="text-center text-sm text-slate-500">
+          <p className="text-center text-sm text-text-secondary">
             Already have an account?{' '}
             <Link to="/login" className="text-indigo-600 hover:text-indigo-700 font-semibold transition-colors">
               Sign in

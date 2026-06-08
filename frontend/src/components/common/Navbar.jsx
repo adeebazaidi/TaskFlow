@@ -41,7 +41,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2 sm:gap-4">
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-xl text-text-secondary hover:text-text hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl text-text-secondary hover:text-text hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800 transition-colors"
             title="Toggle theme"
           >
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
@@ -51,9 +51,9 @@ export default function Navbar() {
           <div className="relative" ref={menuRef}>
           <button
             onClick={() => setOpen((prev) => !prev)}
-            className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 border border-transparent hover:border-border transition-all duration-150"
+            className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-slate-50 dark:bg-slate-800/50 dark:hover:bg-slate-800 border border-transparent hover:border-border transition-all duration-150"
           >
-            <img src={avatarUrl} alt="User Avatar" className="w-8 h-8 rounded-lg shadow-sm border border-border bg-slate-50 dark:bg-slate-800" />
+            <img src={avatarUrl} alt="User Avatar" className="w-8 h-8 rounded-lg shadow-sm border border-border bg-slate-50 dark:bg-slate-800/50 dark:bg-slate-800" />
             <span className="text-text text-sm font-medium hidden sm:block">{user?.name}</span>
             <ChevronDown
               size={14}

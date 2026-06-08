@@ -59,7 +59,7 @@ export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
       style={style}
       className={`bg-card border border-border rounded-2xl p-4 sm:p-5 flex gap-3 sm:gap-4 group
         transition-all duration-200
-        hover:shadow-card-hover hover:border-slate-300 dark:hover:border-slate-500
+        hover:shadow-card-hover hover:border-border dark:hover:border-slate-500
         ${isDragging ? 'opacity-50 ring-2 ring-primary shadow-xl scale-[1.02] z-50' : 'animate-slide-up'}
         ${isCompleted && !isDragging ? 'opacity-60' : ''}`}
     >
@@ -103,7 +103,7 @@ export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
           <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
             <button
               onClick={() => onEdit(task)}
-              className="p-1.5 rounded-lg text-text-secondary hover:text-primary hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-150"
+              className="p-1.5 rounded-lg text-text-secondary hover:text-primary hover:bg-slate-50 dark:bg-slate-800/50 dark:hover:bg-slate-800 transition-all duration-150"
               title="Edit task"
             >
               <Pencil size={13} />
