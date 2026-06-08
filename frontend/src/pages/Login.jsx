@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff, Loader2, CheckSquare, Mail, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 export default function Login() {
   const { login } = useAuth();
@@ -34,7 +35,9 @@ export default function Login() {
     try {
       await login(form);
     } catch (err) {
-      setServerError(err.message || 'Login failed. Please try again.');
+      const msg = err.message || 'Login failed. Please try again.';
+      setServerError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

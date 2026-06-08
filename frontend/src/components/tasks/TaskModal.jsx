@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Loader2 } from 'lucide-react';
 
-const defaultForm = { title: '', description: '', priority: 'medium' };
+const defaultForm = { title: '', description: '', priority: 'medium', dueDate: '' };
 
 export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) {
   const [form, setForm] = useState(defaultForm);
@@ -14,7 +14,7 @@ export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) 
     if (isOpen) {
       setForm(
         task
-          ? { title: task.title, description: task.description || '', priority: task.priority || 'medium' }
+          ? { title: task.title, description: task.description || '', priority: task.priority || 'medium', dueDate: task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '' }
           : defaultForm
       );
       setErrors({});
@@ -42,7 +42,7 @@ export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) 
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
     try {
-      await onSubmit({ title: form.title.trim(), description: form.description.trim(), priority: form.priority });
+      await onSubmit({ title: form.title.trim(), description: form.description.trim(), priority: form.priority, dueDate: form.dueDate || null });
       onClose();
     } catch {
       // error already toasted in hook
@@ -149,6 +149,18 @@ export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) 
                 );
               })}
             </div>
+          </div>
+
+          {/* Due Date */}
+          <div>
+            <label className="label">Due Date</label>
+            <input
+              type="date"
+              name="dueDate"
+              value={form.dueDate}
+              onChange={handleChange}
+              className="input-field"
+            />
           </div>
 
           {/* Actions */}

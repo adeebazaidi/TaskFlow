@@ -7,7 +7,7 @@ export const useTasks = () => {
   const [stats, setStats] = useState({ total: 0, pending: 0, completed: 0 });
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
-  const [filters, setFilters] = useState({ status: '', search: '' });
+  const [filters, setFilters] = useState({ status: '', priority: '', search: '' });
 
   // Keep a stable ref to the latest filters so callbacks can read them without
   // becoming stale closures (F2)
@@ -30,6 +30,7 @@ export const useTasks = () => {
   useEffect(() => {
     const params = {};
     if (filters.status) params.status = filters.status;
+    if (filters.priority) params.priority = filters.priority;
     if (filters.search) params.search = filters.search;
     fetchTasks(params);
   }, [filters, fetchTasks]);
@@ -39,6 +40,7 @@ export const useTasks = () => {
     const current = filtersRef.current;
     const params = {};
     if (current.status) params.status = current.status;
+    if (current.priority) params.priority = current.priority;
     if (current.search) params.search = current.search;
     fetchTasks(params);
   }, [fetchTasks]);

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff, Loader2, CheckSquare, Mail, Lock, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 export default function Register() {
   const { register } = useAuth();
@@ -39,7 +40,9 @@ export default function Register() {
     try {
       await register({ name: form.name.trim(), email: form.email.trim(), password: form.password });
     } catch (err) {
-      setServerError(err.message || 'Registration failed. Please try again.');
+      const msg = err.message || 'Registration failed. Please try again.';
+      setServerError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

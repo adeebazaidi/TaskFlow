@@ -4,19 +4,28 @@ A production-ready, full-stack Task Management application built with the **MERN
 
 ---
 
-## 📸 Features
+## 📸 Screenshots
+
+*(Add screenshots of your application here. For example: Login Page, Dashboard, Task Creation Modal, Mobile View)*
+<div align="center">
+  <img src="https://via.placeholder.com/800x450.png?text=Dashboard+Screenshot" alt="Dashboard" width="800"/>
+</div>
+
+---
+
+## ✨ Features
 
 - **Authentication** — Register & Login with JWT, bcrypt password hashing
 - **Task CRUD** — Create, Read, Update, Delete tasks
 - **Status Toggle** — Mark tasks pending ↔ completed
 - **Priority Levels** — Low, Medium, High with visual indicators
-- **Search** — Debounced search across title & description
-- **Filter** — Filter tasks by status (All / Pending / Completed)
-- **Stats Dashboard** — Live counts for total, pending, and completed tasks
+- **Due Dates** — Set and track task deadlines with overdue highlighting
+- **Search & Filter** — Debounced search and filtering by status & priority
+- **Stats Dashboard** — Live counts for total, pending, completed, and completion percentage
 - **Protected Routes** — Auth-guarded pages via React Context
 - **Toast Notifications** — Success & error feedback
 - **Responsive** — Mobile-first layout with Tailwind CSS
-- **Dark UI** — Professional dark theme
+- **Premium UI** — Professional modern SaaS theme
 
 ---
 

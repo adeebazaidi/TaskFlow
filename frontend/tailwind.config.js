@@ -8,6 +8,13 @@ export default {
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
+        primary: { DEFAULT: '#4F46E5' },
+        success: { DEFAULT: '#22C55E' },
+        warning: { DEFAULT: '#F59E0B' },
+        danger: { DEFAULT: '#EF4444' },
+        background: { DEFAULT: '#F8FAFC' },
+        card: { DEFAULT: '#FFFFFF' },
+        text: { DEFAULT: '#0F172A', secondary: '#64748B' },
         brand: {
           50:  '#EEF2FF',
           100: '#E0E7FF',

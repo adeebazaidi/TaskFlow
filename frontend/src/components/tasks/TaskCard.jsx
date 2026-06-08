@@ -19,11 +19,28 @@ export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
   const isCompleted = task.status === 'completed';
   const priority = priorityConfig[task.priority] || priorityConfig.medium;
 
-  const formattedDate = new Date(task.createdAt).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  let dateText = '';
+  let isOverdue = false;
+
+  if (task.dueDate) {
+    const due = new Date(task.dueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dueDay = new Date(due);
+    dueDay.setHours(0, 0, 0, 0);
+
+    const diffDays = Math.ceil((dueDay - today) / (1000 * 60 * 60 * 24));
+    isOverdue = diffDays < 0 && !isCompleted;
+    
+    const formattedDate = due.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    
+    if (diffDays === 0) dateText = `Due today`;
+    else if (diffDays === 1) dateText = `Due tomorrow`;
+    else if (diffDays < 0) dateText = `Overdue by ${Math.abs(diffDays)}d`;
+    else dateText = `Due in ${diffDays}d (${formattedDate})`;
+  } else {
+    dateText = new Date(task.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
 
   return (
     <div
@@ -95,9 +112,9 @@ export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
             {priority.label}
           </span>
 
-          <span className="flex items-center gap-1 text-xs text-slate-400 ml-auto">
+          <span className={`flex items-center gap-1 text-xs ml-auto ${isOverdue ? 'text-red-500 font-semibold' : 'text-slate-400'}`}>
             <Calendar size={11} />
-            {formattedDate}
+            {dateText}
           </span>
         </div>
       </div>

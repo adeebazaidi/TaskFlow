@@ -9,7 +9,7 @@ import TaskModal from '../components/tasks/TaskModal';
 import DeleteConfirmModal from '../components/tasks/DeleteConfirmModal';
 import TaskFilters from '../components/tasks/TaskFilters';
 import EmptyState from '../components/tasks/EmptyState';
-import LoadingSpinner from '../components/common/LoadingSpinner';
+import TaskSkeleton from '../components/tasks/TaskSkeleton';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -80,6 +80,7 @@ export default function Dashboard() {
                 const params = {};
                 if (filters.status) params.status = filters.status;
                 if (filters.search) params.search = filters.search;
+                if (filters.priority) params.priority = filters.priority;
                 fetchTasks(params);
               }}
               className="p-2.5 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
@@ -98,10 +99,11 @@ export default function Dashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
-          <StatsCard label="Total" value={stats.total} icon={ListTodo} color="indigo" />
-          <StatsCard label="Pending" value={stats.pending} icon={Clock} color="amber" />
-          <StatsCard label="Done" value={stats.completed} icon={CheckCheck} color="emerald" />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
+          <StatsCard label="Total Tasks" value={stats.total} icon={ListTodo} color="indigo" />
+          <StatsCard label="Pending Tasks" value={stats.pending} icon={Clock} color="amber" />
+          <StatsCard label="Completed Tasks" value={stats.completed} icon={CheckCheck} color="emerald" />
+          <StatsCard label="Completion" value={`${stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0}%`} icon={CheckCheck} color="indigo" />
         </div>
 
         {/* Filters */}
@@ -112,8 +114,10 @@ export default function Dashboard() {
         {/* Task List */}
         <section>
           {loading ? (
-            <div className="flex justify-center py-20">
-              <LoadingSpinner size="lg" />
+            <div className="space-y-2.5">
+              {[1, 2, 3].map((i) => (
+                <TaskSkeleton key={i} />
+              ))}
             </div>
           ) : tasks.length === 0 ? (
             <EmptyState hasFilters={hasFilters} onAdd={openCreateModal} />

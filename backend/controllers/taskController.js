@@ -19,13 +19,17 @@ const ALLOWED_SORTS = {
 // @access  Private
 const getTasks = async (req, res) => {
   try {
-    const { status, search, sort = '-createdAt' } = req.query;
+    const { status, search, priority, sort = '-createdAt' } = req.query;
 
     // Build the filter for actual task query
     const taskFilter = { userId: req.user._id };
 
     if (status && ['pending', 'completed'].includes(status)) {
       taskFilter.status = status;
+    }
+
+    if (priority && ['low', 'medium', 'high'].includes(priority)) {
+      taskFilter.priority = priority;
     }
 
     if (search && search.trim()) {
@@ -76,12 +80,13 @@ const getTasks = async (req, res) => {
 // @access  Private
 const createTask = async (req, res) => {
   try {
-    const { title, description, priority } = req.body;
+    const { title, description, priority, dueDate } = req.body;
 
     const task = await Task.create({
       title,
       description,
       priority,
+      dueDate,
       userId: req.user._id,
     });
 
@@ -101,7 +106,7 @@ const createTask = async (req, res) => {
 // @access  Private
 const updateTask = async (req, res) => {
   try {
-    const { title, description, priority, status } = req.body;
+    const { title, description, priority, status, dueDate } = req.body;
 
     const task = await Task.findOne({ _id: req.params.id, userId: req.user._id });
     if (!task) {
@@ -113,6 +118,7 @@ const updateTask = async (req, res) => {
     if (description !== undefined) task.description = description;
     if (priority !== undefined) task.priority = priority;
     if (status !== undefined) task.status = status;
+    if (dueDate !== undefined) task.dueDate = dueDate;
 
     await task.save();
 

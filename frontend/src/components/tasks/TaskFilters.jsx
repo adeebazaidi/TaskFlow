@@ -7,6 +7,13 @@ const STATUS_FILTERS = [
   { value: 'completed', label: 'Completed' },
 ];
 
+const PRIORITY_FILTERS = [
+  { value: '', label: 'Any Priority' },
+  { value: 'high', label: 'High' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'low', label: 'Low' },
+];
+
 export default function TaskFilters({ filters, onChange }) {
   const searchRef = useRef(null);
   const debounceTimer = useRef(null);
@@ -68,7 +75,7 @@ export default function TaskFilters({ filters, onChange }) {
             onClick={() => onChange({ ...filters, status: value })}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 ${
               filters.status === value
-                ? 'bg-white text-indigo-700 shadow-sm border border-slate-200'
+                ? 'bg-white text-primary shadow-sm border border-slate-200'
                 : 'text-slate-500 hover:text-slate-700 hover:bg-white/60'
             }`}
           >
@@ -76,6 +83,27 @@ export default function TaskFilters({ filters, onChange }) {
           </button>
         ))}
       </div>
+
+      {/* Priority filter */}
+      <select
+        value={filters.priority}
+        onChange={(e) => onChange({ ...filters, priority: e.target.value })}
+        className="input-field max-w-[140px] text-xs py-2"
+      >
+        {PRIORITY_FILTERS.map((pf) => (
+          <option key={pf.value} value={pf.value}>{pf.label}</option>
+        ))}
+      </select>
+
+      {/* Clear Filters */}
+      {(filters.status || filters.priority || filters.search) && (
+        <button
+          onClick={() => onChange({ status: '', priority: '', search: '' })}
+          className="text-xs text-slate-500 hover:text-danger hover:bg-red-50 px-3 py-2 rounded-xl transition-colors border border-transparent hover:border-red-100 whitespace-nowrap"
+        >
+          Clear Filters
+        </button>
+      )}
     </div>
   );
 }

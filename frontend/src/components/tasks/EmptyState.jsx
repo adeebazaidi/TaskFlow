@@ -7,10 +7,7 @@ export default function EmptyState({ hasFilters, onAdd }) {
         <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center mb-5">
           <SearchX size={32} className="text-slate-400" />
         </div>
-        <h3 className="text-lg font-semibold text-slate-900 mb-1.5">No matching tasks</h3>
-        <p className="text-slate-500 max-w-sm mb-6">
-          We couldn't find any tasks matching your current search or filter criteria.
-        </p>
+        <h3 className="text-lg font-semibold text-slate-900 mb-1.5">No matching tasks found.</h3>
       </div>
     );
   }
@@ -20,9 +17,9 @@ export default function EmptyState({ hasFilters, onAdd }) {
       <div className="w-16 h-16 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-center mb-5">
         <ClipboardList size={32} className="text-indigo-600" />
       </div>
-      <h3 className="text-xl font-bold text-slate-900 mb-2">No tasks yet</h3>
+      <h3 className="text-xl font-bold text-slate-900 mb-2">🎯 No tasks yet.</h3>
       <p className="text-slate-500 max-w-sm mb-7">
-        You have a clean slate! Create your first task to start organizing your work and getting things done.
+        Create your first task and start organizing your work.
       </p>
       <button onClick={onAdd} className="btn-primary flex items-center gap-2">
         <Plus size={18} />
