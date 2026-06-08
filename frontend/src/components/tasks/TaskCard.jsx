@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Pencil, Trash2, CheckCircle2, Circle, Calendar, Flag } from 'lucide-react';
+import { Pencil, Trash2, CheckCircle2, Circle, Calendar, Flag, GripVertical } from 'lucide-react';
+import { useDraggable } from '@dnd-kit/core';
 
 const priorityConfig = {
   low:    { label: 'Low',    class: 'badge-low' },
@@ -9,6 +10,16 @@ const priorityConfig = {
 
 export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
   const [toggling, setToggling] = useState(false);
+
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: task._id,
+    data: { task },
+  });
+
+  const style = transform ? {
+    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    zIndex: 50,
+  } : undefined;
 
   const handleToggle = async () => {
     setToggling(true);
@@ -44,22 +55,34 @@ export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
 
   return (
     <div
-      className={`bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 flex gap-3 sm:gap-4 group
+      ref={setNodeRef}
+      style={style}
+      className={`bg-card border border-border rounded-2xl p-4 sm:p-5 flex gap-3 sm:gap-4 group
         transition-all duration-200
-        hover:shadow-[0_4px_16px_-2px_rgba(0,0,0,0.08)] hover:border-slate-300
-        animate-slide-up ${isCompleted ? 'opacity-60' : ''}`}
+        hover:shadow-card-hover hover:border-slate-300 dark:hover:border-slate-500
+        ${isDragging ? 'opacity-50 ring-2 ring-primary shadow-xl scale-[1.02] z-50' : 'animate-slide-up'}
+        ${isCompleted && !isDragging ? 'opacity-60' : ''}`}
     >
+      {/* Drag Handle */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="flex-shrink-0 mt-0.5 text-text-secondary hover:text-text cursor-grab active:cursor-grabbing outline-none"
+      >
+        <GripVertical size={18} />
+      </div>
+
       {/* Toggle Button */}
       <button
         onClick={handleToggle}
         disabled={toggling}
-        className="flex-shrink-0 mt-0.5 text-slate-300 hover:text-indigo-600 transition-colors duration-150"
+        className="flex-shrink-0 mt-0.5 text-text-secondary hover:text-primary transition-colors duration-150"
         title={isCompleted ? 'Mark as pending' : 'Mark as completed'}
       >
         {toggling ? (
-          <div className="w-5 h-5 border-2 border-slate-200 border-t-indigo-600 rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-border border-t-primary rounded-full animate-spin" />
         ) : isCompleted ? (
-          <CheckCircle2 size={20} className="text-emerald-500" />
+          <CheckCircle2 size={20} className="text-success" />
         ) : (
           <Circle size={20} />
         )}
@@ -70,7 +93,7 @@ export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
         <div className="flex items-start justify-between gap-2 mb-1.5">
           <h3
             className={`font-semibold text-sm leading-snug break-words ${
-              isCompleted ? 'line-through text-slate-400' : 'text-slate-900'
+              isCompleted ? 'line-through text-text-secondary' : 'text-text'
             }`}
           >
             {task.title}
@@ -80,14 +103,14 @@ export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
           <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
             <button
               onClick={() => onEdit(task)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-150"
+              className="p-1.5 rounded-lg text-text-secondary hover:text-primary hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-150"
               title="Edit task"
             >
               <Pencil size={13} />
             </button>
             <button
               onClick={() => onDelete(task._id)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all duration-150"
+              className="p-1.5 rounded-lg text-text-secondary hover:text-danger hover:bg-red-50 dark:hover:bg-red-900/30 transition-all duration-150"
               title="Delete task"
             >
               <Trash2 size={13} />
@@ -96,7 +119,7 @@ export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
         </div>
 
         {task.description && (
-          <p className={`text-xs leading-relaxed mb-3 ${isCompleted ? 'text-slate-400' : 'text-slate-500'}`}>
+          <p className={`text-xs leading-relaxed mb-3 ${isCompleted ? 'text-text-secondary/70' : 'text-text-secondary'}`}>
             {task.description}
           </p>
         )}
@@ -112,7 +135,7 @@ export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
             {priority.label}
           </span>
 
-          <span className={`flex items-center gap-1 text-xs ml-auto ${isOverdue ? 'text-red-500 font-semibold' : 'text-slate-400'}`}>
+          <span className={`flex items-center gap-1 text-xs ml-auto ${isOverdue ? 'text-danger font-semibold' : 'text-text-secondary'}`}>
             <Calendar size={11} />
             {dateText}
           </span>

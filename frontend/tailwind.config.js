@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
@@ -8,13 +9,14 @@ export default {
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
-        primary: { DEFAULT: '#4F46E5' },
-        success: { DEFAULT: '#22C55E' },
-        warning: { DEFAULT: '#F59E0B' },
-        danger: { DEFAULT: '#EF4444' },
-        background: { DEFAULT: '#F8FAFC' },
-        card: { DEFAULT: '#FFFFFF' },
-        text: { DEFAULT: '#0F172A', secondary: '#64748B' },
+        primary: { DEFAULT: 'var(--color-primary)' },
+        success: { DEFAULT: 'var(--color-success)' },
+        warning: { DEFAULT: 'var(--color-warning)' },
+        danger: { DEFAULT: 'var(--color-danger)' },
+        background: { DEFAULT: 'var(--color-bg)' },
+        card: { DEFAULT: 'var(--color-card)' },
+        text: { DEFAULT: 'var(--color-text)', secondary: 'var(--color-text-secondary)' },
+        border: 'var(--color-border)',
         brand: {
           50:  '#EEF2FF',
           100: '#E0E7FF',

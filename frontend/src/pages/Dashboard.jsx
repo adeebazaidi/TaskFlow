@@ -10,6 +10,9 @@ import DeleteConfirmModal from '../components/tasks/DeleteConfirmModal';
 import TaskFilters from '../components/tasks/TaskFilters';
 import EmptyState from '../components/tasks/EmptyState';
 import TaskSkeleton from '../components/tasks/TaskSkeleton';
+import KanbanColumn from '../components/tasks/KanbanColumn';
+import { DndContext, closestCorners, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -50,6 +53,33 @@ export default function Dashboard() {
   };
 
   const hasFilters = Boolean(filters.status || filters.search);
+
+  const pendingTasks = tasks.filter((t) => t.status === 'pending');
+  const completedTasks = tasks.filter((t) => t.status === 'completed');
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
+  const handleDragEnd = async (event) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const taskId = active.id;
+    const task = tasks.find((t) => t._id === taskId);
+    if (!task) return;
+
+    let newStatus = over.id;
+    if (newStatus !== 'pending' && newStatus !== 'completed') {
+      const overTask = tasks.find((t) => t._id === over.id);
+      if (overTask) newStatus = overTask.status;
+    }
+
+    if (newStatus && task.status !== newStatus) {
+      await toggleStatus(taskId);
+    }
+  };
 
   // Greeting based on time
   const hour = new Date().getHours();
@@ -114,33 +144,46 @@ export default function Dashboard() {
         {/* Task List */}
         <section>
           {loading ? (
-            <div className="space-y-2.5">
-              {[1, 2, 3].map((i) => (
-                <TaskSkeleton key={i} />
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2.5">
+                {[1, 2].map((i) => <TaskSkeleton key={i} />)}
+              </div>
+              <div className="space-y-2.5">
+                {[1].map((i) => <TaskSkeleton key={`c-${i}`} />)}
+              </div>
             </div>
           ) : tasks.length === 0 ? (
             <EmptyState hasFilters={hasFilters} onAdd={openCreateModal} />
           ) : (
-            <div className="space-y-2.5">
-              {/* Results count */}
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs text-slate-400 font-medium">
+            <>
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs text-text-secondary font-medium">
                   {tasks.length} task{tasks.length !== 1 ? 's' : ''}
                   {hasFilters ? ' matching filters' : ''}
                 </p>
               </div>
 
-              {tasks.map((task) => (
-                <TaskCard
-                  key={task._id}
-                  task={task}
-                  onEdit={openEditModal}
-                  onDelete={(id) => setDeletingTaskId(id)}
-                  onToggle={toggleStatus}
-                />
-              ))}
-            </div>
+              <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                  <KanbanColumn
+                    id="pending"
+                    title="To Do"
+                    tasks={pendingTasks}
+                    onEdit={openEditModal}
+                    onDelete={(id) => setDeletingTaskId(id)}
+                    onToggle={toggleStatus}
+                  />
+                  <KanbanColumn
+                    id="completed"
+                    title="Completed"
+                    tasks={completedTasks}
+                    onEdit={openEditModal}
+                    onDelete={(id) => setDeletingTaskId(id)}
+                    onToggle={toggleStatus}
+                  />
+                </div>
+              </DndContext>
+            </>
           )}
         </section>
       </main>

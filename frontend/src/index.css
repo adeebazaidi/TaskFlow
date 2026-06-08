@@ -3,6 +3,30 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-primary: #4F46E5;
+    --color-success: #22C55E;
+    --color-warning: #F59E0B;
+    --color-danger: #EF4444;
+    --color-bg: #F8FAFC;
+    --color-card: #FFFFFF;
+    --color-text: #0F172A;
+    --color-text-secondary: #64748B;
+    --color-border: #E2E8F0;
+  }
+
+  .dark {
+    --color-primary: #6366F1;
+    --color-success: #22C55E;
+    --color-warning: #F59E0B;
+    --color-danger: #EF4444;
+    --color-bg: #0F172A;
+    --color-card: #1E293B;
+    --color-text: #F8FAFC;
+    --color-text-secondary: #94A3B8;
+    --color-border: #334155;
+  }
+
   * {
     box-sizing: border-box;
   }
@@ -38,11 +62,11 @@
 @layer components {
   /* ── Cards ─────────────────────────────────────── */
   .card {
-    @apply bg-card border border-slate-200 rounded-[16px] shadow-sm transition-all duration-200;
+    @apply bg-card border border-border rounded-[16px] shadow-sm transition-all duration-200;
   }
 
   .glass-card {
-    @apply bg-card border border-slate-200 rounded-[16px] shadow-sm;
+    @apply bg-card border border-border rounded-[16px] shadow-sm;
   }
 
   /* ── Buttons ────────────────────────────────────── */
@@ -56,9 +80,9 @@
   }
 
   .btn-secondary {
-    @apply bg-white hover:bg-slate-50 active:bg-slate-100
+    @apply bg-card hover:bg-slate-50 dark:hover:bg-slate-800 active:bg-slate-100 dark:active:bg-slate-700
            text-text font-medium px-5 py-2.5 rounded-[12px]
-           border border-slate-200 hover:border-slate-300
+           border border-border hover:border-slate-300 dark:hover:border-slate-500
            transition-all duration-200
            active:scale-[0.98] shadow-sm;
   }
@@ -71,10 +95,10 @@
 
   /* ── Inputs ─────────────────────────────────────── */
   .input-field {
-    @apply w-full bg-white border border-slate-200 rounded-[12px]
+    @apply w-full bg-card border border-border rounded-[12px]
            px-4 py-2.5 text-text placeholder-text-secondary text-sm
-           focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
-           hover:border-slate-300
+           focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-primary
+           hover:border-slate-300 dark:hover:border-slate-500
            transition-all duration-200 shadow-sm;
   }
 
@@ -86,29 +110,29 @@
   /* ── Status badges ──────────────────────────────── */
   .badge-pending {
     @apply inline-flex items-center gap-1.5
-           bg-amber-50 text-amber-700 border border-amber-200
+           bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800
            text-xs font-semibold px-2.5 py-1 rounded-full;
   }
 
   .badge-completed {
     @apply inline-flex items-center gap-1.5
-           bg-emerald-50 text-emerald-700 border border-emerald-200
+           bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800
            text-xs font-semibold px-2.5 py-1 rounded-full;
   }
 
   /* ── Priority badges ────────────────────────────── */
   .badge-low {
-    @apply inline-flex items-center bg-green-50 text-green-700 border border-green-200
+    @apply inline-flex items-center bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800
            text-xs font-semibold px-2.5 py-1 rounded-full;
   }
 
   .badge-medium {
-    @apply inline-flex items-center bg-yellow-50 text-yellow-700 border border-yellow-200
+    @apply inline-flex items-center bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800
            text-xs font-semibold px-2.5 py-1 rounded-full;
   }
 
   .badge-high {
-    @apply inline-flex items-center bg-red-50 text-red-700 border border-red-200
+    @apply inline-flex items-center bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800
            text-xs font-semibold px-2.5 py-1 rounded-full;
   }
 }
