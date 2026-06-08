@@ -146,9 +146,10 @@ export default function Login() {
           </p>
         </div>
 
-        <p className="text-center text-xs text-text-secondary mt-6">
-          © {new Date().getFullYear()} TaskFlow. Built with React & Node.js.
-        </p>
+        <div className="text-center text-xs text-text-secondary mt-6">
+          <p>Test email: test@test.com</p>
+          <p>Test Password: test@123</p>
+        </div>
       </div>
     </div>
   );
