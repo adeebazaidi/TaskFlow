@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Loader2 } from 'lucide-react';
+import { X, Loader2, Calendar, Flag, AlignLeft, Type } from 'lucide-react';
 
 const defaultForm = { title: '', description: '', priority: 'medium', dueDate: '' };
 
@@ -59,25 +59,25 @@ export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-fade-in"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-[0_20px_60px_-10px_rgba(0,0,0,0.18)] animate-slide-up">
+      <div className="w-full max-w-md bg-card border border-border/80 rounded-[24px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] animate-slide-up overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-border">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border/80 bg-slate-500/5">
           <div>
-            <h2 className="text-base font-bold text-text">
+            <h2 className="text-base font-extrabold text-text">
               {isEditing ? 'Edit Task' : 'New Task'}
             </h2>
-            <p className="text-xs text-text-secondary mt-0.5">
+            <p className="text-xs text-text-secondary mt-0.5 font-medium">
               {isEditing ? 'Update the task details below' : 'Fill in the details to create a task'}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg text-text-secondary hover:text-text-secondary hover:bg-slate-100 dark:bg-slate-800 transition-all duration-150"
+            className="p-2 rounded-xl text-text-secondary hover:text-text hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
           >
-            <X size={17} />
+            <X size={16} className="stroke-[2.5]" />
           </button>
         </div>
 
@@ -85,8 +85,9 @@ export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) 
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           {/* Title */}
           <div>
-            <label className="label">
-              Title <span className="text-red-500">*</span>
+            <label className="label flex items-center gap-1.5">
+              <Type size={13} className="text-indigo-500" />
+              <span>Title <span className="text-rose-500">*</span></span>
             </label>
             <input
               ref={inputRef}
@@ -94,55 +95,61 @@ export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) 
               name="title"
               value={form.title}
               onChange={handleChange}
-              placeholder="e.g. Design landing page"
-              className={`input-field ${errors.title ? 'border-red-400 focus:border-red-400 focus:ring-red-200' : ''}`}
+              placeholder="e.g., Design landing page layout"
+              className={`input-field font-semibold ${errors.title ? 'border-rose-400 focus:border-rose-400 focus:ring-rose-200' : ''}`}
               maxLength={100}
             />
             <div className="flex justify-between mt-1.5">
               {errors.title ? (
-                <p className="text-xs text-red-600">{errors.title}</p>
+                <p className="text-xs text-rose-500 font-semibold">{errors.title}</p>
               ) : <span />}
-              <span className="text-xs text-text-secondary">{form.title.length}/100</span>
+              <span className="text-[10px] text-text-secondary font-bold">{form.title.length}/100</span>
             </div>
           </div>
 
           {/* Description */}
           <div>
-            <label className="label">Description</label>
+            <label className="label flex items-center gap-1.5">
+              <AlignLeft size={13} className="text-indigo-500" />
+              <span>Description</span>
+            </label>
             <textarea
               name="description"
               value={form.description}
               onChange={handleChange}
-              placeholder="Add more details about this task…"
+              placeholder="Add more details or notes about this task…"
               rows={3}
-              className={`input-field resize-none ${errors.description ? 'border-red-400 focus:border-red-400 focus:ring-red-200' : ''}`}
+              className={`input-field resize-none font-medium ${errors.description ? 'border-rose-400 focus:border-rose-400 focus:ring-rose-200' : ''}`}
               maxLength={500}
             />
             <div className="flex justify-between mt-1.5">
               {errors.description ? (
-                <p className="text-xs text-red-600">{errors.description}</p>
+                <p className="text-xs text-rose-500 font-semibold">{errors.description}</p>
               ) : <span />}
-              <span className="text-xs text-text-secondary">{form.description.length}/500</span>
+              <span className="text-[10px] text-text-secondary font-bold">{form.description.length}/500</span>
             </div>
           </div>
 
           {/* Priority */}
           <div>
-            <label className="label">Priority</label>
-            <div className="grid grid-cols-3 gap-2">
+            <label className="label flex items-center gap-1.5">
+              <Flag size={13} className="text-indigo-500" />
+              <span>Priority Level</span>
+            </label>
+            <div className="grid grid-cols-3 gap-2.5">
               {['low', 'medium', 'high'].map((p) => {
                 const active = form.priority === p;
                 const styles = {
-                  low:    active ? 'bg-slate-100 dark:bg-slate-800 border-slate-400 text-text font-semibold' : 'border-border text-text-secondary hover:border-border hover:bg-slate-50 dark:bg-slate-800/50',
-                  medium: active ? 'bg-blue-50 border-blue-500 text-blue-700 font-semibold' : 'border-border text-text-secondary hover:border-border hover:bg-slate-50 dark:bg-slate-800/50',
-                  high:   active ? 'bg-red-50 border-red-400 text-red-700 font-semibold' : 'border-border text-text-secondary hover:border-border hover:bg-slate-50 dark:bg-slate-800/50',
+                  low:    active ? 'bg-teal-500/10 border-teal-500 text-teal-700 dark:text-teal-400 font-bold' : 'border-border text-text-secondary hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50',
+                  medium: active ? 'bg-amber-500/10 border-amber-500 text-amber-700 dark:text-amber-400 font-bold' : 'border-border text-text-secondary hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50',
+                  high:   active ? 'bg-rose-500/10 border-rose-500 text-rose-700 dark:text-rose-400 font-bold' : 'border-border text-text-secondary hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50',
                 };
                 return (
                   <button
                     key={p}
                     type="button"
                     onClick={() => setForm((f) => ({ ...f, priority: p }))}
-                    className={`py-2 px-3 rounded-xl border text-sm capitalize transition-all duration-150 ${styles[p]}`}
+                    className={`py-2 px-3 rounded-xl border text-xs capitalize transition-all duration-300 active:scale-95 ${styles[p]}`}
                   >
                     {p}
                   </button>
@@ -153,25 +160,28 @@ export default function TaskModal({ isOpen, onClose, onSubmit, task, loading }) 
 
           {/* Due Date */}
           <div>
-            <label className="label">Due Date</label>
+            <label className="label flex items-center gap-1.5">
+              <Calendar size={13} className="text-indigo-500" />
+              <span>Due Date</span>
+            </label>
             <input
               type="date"
               name="dueDate"
               value={form.dueDate}
               onChange={handleChange}
-              className="input-field"
+              className="input-field font-semibold text-text-secondary cursor-pointer"
             />
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-1">
-            <button type="button" onClick={onClose} className="btn-secondary flex-1">
+          <div className="flex gap-3 pt-2">
+            <button type="button" onClick={onClose} className="btn-secondary flex-1 py-3 text-sm">
               Cancel
             </button>
-            <button type="submit" disabled={loading} className="btn-primary flex-1 flex items-center justify-center gap-2">
+            <button type="submit" disabled={loading} className="btn-primary flex-1 flex items-center justify-center gap-2 py-3 text-sm">
               {loading ? (
                 <>
-                  <Loader2 size={15} className="animate-spin" />
+                  <Loader2 size={16} className="animate-spin" />
                   {isEditing ? 'Saving…' : 'Creating…'}
                 </>
               ) : (

@@ -86,17 +86,21 @@ export default function Dashboard() {
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Ambient glowing circles */}
+      <div className="bg-glow-purple top-24 -left-48" />
+      <div className="bg-glow-rose top-[400px] -right-48" />
+
       <Navbar />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 relative z-10">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 animate-fade-in">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-text tracking-tight">
-              {greeting}, {user?.name?.split(' ')[0]} 👋
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-text tracking-tight">
+              {greeting}, <span className="bg-gradient-to-r from-[#1E5387] to-[#2E6CA4] bg-clip-text text-transparent">{user?.name?.split(' ')[0]}</span> 👋
             </h2>
-            <p className="text-text-secondary text-sm mt-1.5">
+            <p className="text-text-secondary text-sm sm:text-base mt-2 font-medium">
               {stats.pending > 0
                 ? `You have ${stats.pending} pending task${stats.pending !== 1 ? 's' : ''} to complete.`
                 : stats.total > 0
@@ -113,27 +117,27 @@ export default function Dashboard() {
                 if (filters.priority) params.priority = filters.priority;
                 fetchTasks(params);
               }}
-              className="p-2.5 rounded-xl border border-border bg-card text-text-secondary hover:text-text hover:bg-slate-50 dark:bg-slate-800/50 hover:border-border transition-all shadow-sm"
+              className="p-2.5 rounded-xl border border-border bg-card text-text-secondary hover:text-text hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-300 shadow-sm hover:shadow-md active:scale-95"
               title="Refresh"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             </button>
             <button
               onClick={openCreateModal}
-              className="btn-primary flex items-center gap-2"
+              className="btn-primary flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#1E5387] to-[#2E6CA4] shadow-[0_6px_20px_rgba(30,83,135,0.35)] hover:shadow-[0_8px_25px_rgba(30,83,135,0.5)] font-bold transition-all duration-300 active:scale-95 text-white"
             >
-              <Plus size={18} />
+              <Plus size={18} className="stroke-[2.5]" />
               <span>New Task</span>
             </button>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
-          <StatsCard label="Total Tasks" value={stats.total} icon={ListTodo} color="indigo" />
-          <StatsCard label="Pending Tasks" value={stats.pending} icon={Clock} color="amber" />
-          <StatsCard label="Completed Tasks" value={stats.completed} icon={CheckCheck} color="emerald" />
-          <StatsCard label="Completion" value={`${stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0}%`} icon={CheckCheck} color="indigo" />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5 mb-8">
+          <StatsCard label="Total Tasks" value={stats.total} icon={ListTodo} color="coral" />
+          <StatsCard label="Pending Tasks" value={stats.pending} icon={Clock} color="teal" />
+          <StatsCard label="Completed Tasks" value={stats.completed} icon={CheckCheck} color="blue" />
+          <StatsCard label="Completion" value={stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0} isCompletion={true} />
         </div>
 
         {/* Filters */}

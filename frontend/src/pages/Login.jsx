@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Eye, EyeOff, Loader2, CheckSquare, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, Loader2, CheckCircle2, Mail, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
@@ -45,37 +45,37 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Subtle background accents */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-48 -right-48 w-96 h-96 bg-indigo-100/60 rounded-full blur-3xl" />
-        <div className="absolute -bottom-48 -left-48 w-96 h-96 bg-violet-100/40 rounded-full blur-3xl" />
+      {/* Decorative ambient gradients */}
+      <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none overflow-hidden">
+        <div className="bg-glow-purple -top-48 -right-48" style={{ width: '600px', height: '600px' }} />
+        <div className="bg-glow-rose -bottom-48 -left-48" style={{ width: '600px', height: '600px' }} />
       </div>
 
-      <div className="w-full max-w-md relative animate-slide-up">
-        {/* Logo mark */}
+      <div className="w-full max-w-[420px] relative z-10 animate-slide-up">
+        {/* Brand Logo Header */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-11 h-11 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200 mb-4">
-            <CheckSquare size={22} className="text-white" />
+          <div className="w-12 h-12 bg-gradient-to-tr from-indigo-500 to-violet-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20 mb-4 animate-pulse">
+            <CheckCircle2 size={24} className="text-white stroke-[2.5]" />
           </div>
-          <h1 className="text-2xl font-bold text-text tracking-tight">Welcome back</h1>
-          <p className="text-text-secondary text-sm mt-1.5">Sign in to your TaskFlow account</p>
+          <h1 className="text-2xl font-extrabold text-text tracking-tight">Welcome back</h1>
+          <p className="text-text-secondary text-sm font-medium mt-1">Sign in to manage your tasks</p>
         </div>
 
-        {/* Card */}
-        <div className="bg-card border border-border rounded-2xl p-7 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08)]">
+        {/* Glassmorphic Form Card */}
+        <div className="glass-card p-8 border border-border/80 shadow-2xl">
           {serverError && (
-            <div className="mb-5 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm animate-fade-in flex items-start gap-2">
-              <span className="mt-0.5">⚠</span>
-              {serverError}
+            <div className="mb-5 px-4 py-3 bg-rose-50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-900/50 rounded-2xl text-rose-600 dark:text-rose-400 text-xs font-bold animate-fade-in flex items-start gap-2">
+              <span className="mt-0.5">⚠️</span>
+              <span>{serverError}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-            {/* Email */}
+            {/* Email Address */}
             <div>
               <label className="label">Email address</label>
               <div className="relative">
-                <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
+                <Mail size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none stroke-[2]" />
                 <input
                   type="email"
                   name="email"
@@ -83,17 +83,19 @@ export default function Login() {
                   onChange={handleChange}
                   placeholder="you@example.com"
                   autoComplete="email"
-                  className={`input-field pl-9 ${errors.email ? 'border-red-400 focus:border-red-400 focus:ring-red-200' : ''}`}
+                  className={`input-field pl-10 ${errors.email ? 'border-rose-400 focus:border-rose-400 focus:ring-rose-200' : ''}`}
                 />
               </div>
-              {errors.email && <p className="mt-1.5 text-xs text-red-600">{errors.email}</p>}
+              {errors.email && <p className="mt-1.5 text-xs text-rose-500 font-semibold">{errors.email}</p>}
             </div>
 
             {/* Password */}
             <div>
-              <label className="label">Password</label>
+              <div className="flex justify-between items-center mb-1">
+                <label className="label !mb-0">Password</label>
+              </div>
               <div className="relative">
-                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
+                <Lock size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none stroke-[2]" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
@@ -101,24 +103,24 @@ export default function Login() {
                   onChange={handleChange}
                   placeholder="••••••••"
                   autoComplete="current-password"
-                  className={`input-field pl-9 pr-10 ${errors.password ? 'border-red-400 focus:border-red-400 focus:ring-red-200' : ''}`}
+                  className={`input-field pl-10 pr-10 ${errors.password ? 'border-rose-400 focus:border-rose-400 focus:ring-rose-200' : ''}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((s) => !s)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-secondary transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary/70 hover:text-text transition-colors p-1"
                 >
                   {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
-              {errors.password && <p className="mt-1.5 text-xs text-red-600">{errors.password}</p>}
+              {errors.password && <p className="mt-1.5 text-xs text-rose-500 font-semibold">{errors.password}</p>}
             </div>
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2 mt-2 py-3"
+              className="btn-primary w-full flex items-center justify-center gap-2 mt-4 py-3 text-sm font-bold shadow-lg"
             >
               {loading ? (
                 <>
@@ -132,23 +134,27 @@ export default function Login() {
           </form>
 
           {/* Divider */}
-          <div className="flex items-center gap-3 my-5">
-            <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
-            <span className="text-xs text-text-secondary font-medium">OR</span>
-            <div className="flex-1 h-px bg-slate-100 dark:bg-slate-800" />
+          <div className="flex items-center gap-3 my-6">
+            <div className="flex-1 h-px bg-border/80" />
+            <span className="text-[10px] text-text-secondary font-bold uppercase tracking-wider">OR</span>
+            <div className="flex-1 h-px bg-border/80" />
           </div>
 
-          <p className="text-center text-sm text-text-secondary">
+          <p className="text-center text-sm font-medium text-text-secondary">
             Don't have an account?{' '}
-            <Link to="/register" className="text-indigo-600 hover:text-indigo-700 font-semibold transition-colors">
+            <Link to="/register" className="text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 font-bold transition-colors">
               Create one free
             </Link>
           </p>
         </div>
 
-        <div className="text-center text-xs text-text-secondary mt-6">
-          <p>Test email: test@test.com</p>
-          <p>Test Password: test@123</p>
+        {/* Demo Credentials Box */}
+        <div className="mt-6 p-4 rounded-[18px] bg-slate-500/5 border border-border/40 backdrop-blur-sm text-center text-xs text-text-secondary font-medium">
+          <p className="font-bold text-text mb-1 text-[11px] uppercase tracking-wider text-indigo-500">Quick Test Credentials</p>
+          <div className="flex justify-center gap-4 mt-1.5">
+            <p>Email: <span className="font-bold text-text select-all">test@test.com</span></p>
+            <p>Password: <span className="font-bold text-text select-all">test@123</span></p>
+          </div>
         </div>
       </div>
     </div>
