@@ -12,7 +12,7 @@ import EmptyState from '../components/tasks/EmptyState';
 import TaskSkeleton from '../components/tasks/TaskSkeleton';
 import KanbanColumn from '../components/tasks/KanbanColumn';
 import { DndContext, closestCorners, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { sortableKeyboardCoordinates, arrayMove } from '@dnd-kit/sortable';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -28,6 +28,7 @@ export default function Dashboard() {
     updateTask,
     deleteTask,
     toggleStatus,
+    reorderTasks,
   } = useTasks();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -66,18 +67,114 @@ export default function Dashboard() {
     const { active, over } = event;
     if (!over) return;
 
-    const taskId = active.id;
-    const task = tasks.find((t) => t._id === taskId);
-    if (!task) return;
+    const activeId = active.id;
+    const overId = over.id;
 
-    let newStatus = over.id;
-    if (newStatus !== 'pending' && newStatus !== 'completed') {
-      const overTask = tasks.find((t) => t._id === over.id);
-      if (overTask) newStatus = overTask.status;
+    if (activeId === overId) return;
+
+    const activeTask = tasks.find((t) => t._id === activeId);
+    if (!activeTask) return;
+
+    // Determine the destination status (column)
+    let destStatus = overId;
+    const isOverColumn = overId === 'pending' || overId === 'completed';
+
+    if (!isOverColumn) {
+      const overTask = tasks.find((t) => t._id === overId);
+      if (overTask) {
+        destStatus = overTask.status;
+      } else {
+        return;
+      }
     }
 
-    if (newStatus && task.status !== newStatus) {
-      await toggleStatus(taskId);
+    const sourceStatus = activeTask.status;
+
+    // Filter tasks in source and destination columns
+    const sourceTasks = tasks.filter((t) => t.status === sourceStatus);
+    const destTasks = tasks.filter((t) => t.status === destStatus);
+
+    let updatedTasks = [...tasks];
+
+    if (sourceStatus === destStatus) {
+      // Reordering within the SAME column
+      const oldIndex = sourceTasks.findIndex((t) => t._id === activeId);
+      const newIndex = isOverColumn ? sourceTasks.length - 1 : sourceTasks.findIndex((t) => t._id === overId);
+      
+      if (oldIndex === newIndex) return;
+
+      const reorderedSource = arrayMove(sourceTasks, oldIndex, newIndex);
+
+      // Map to set positions
+      const reorderedSourceWithPosition = reorderedSource.map((t, idx) => ({
+        ...t,
+        position: idx,
+      }));
+
+      // Update in our full tasks list
+      updatedTasks = updatedTasks.map((t) => {
+        if (t.status === sourceStatus) {
+          const found = reorderedSourceWithPosition.find((rt) => rt._id === t._id);
+          return found || t;
+        }
+        return t;
+      });
+
+      // Sort updatedTasks locally based on position to ensure correct render order
+      updatedTasks.sort((a, b) => {
+        if (a.position !== b.position) {
+          return a.position - b.position;
+        }
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
+      // Call optimistic reorder
+      const updates = reorderedSourceWithPosition.map(t => ({ id: t._id, position: t.position, status: sourceStatus }));
+      await reorderTasks(updates, updatedTasks);
+    } else {
+      // Dragging to a DIFFERENT column
+      const oldIndex = sourceTasks.findIndex((t) => t._id === activeId);
+      const newIndex = isOverColumn ? destTasks.length : destTasks.findIndex((t) => t._id === overId);
+
+      // Toggle status of the active task
+      const updatedActiveTask = { ...activeTask, status: destStatus };
+
+      // Update source column items (positions shifted)
+      const updatedSource = sourceTasks.filter((t) => t._id !== activeId).map((t, idx) => ({ ...t, position: idx }));
+
+      // Insert into destination column items (positions shifted)
+      const updatedDest = [...destTasks];
+      updatedDest.splice(newIndex, 0, updatedActiveTask);
+      const updatedDestWithPosition = updatedDest.map((t, idx) => ({ ...t, position: idx }));
+
+      // Merge back into full tasks list
+      updatedTasks = updatedTasks.map((t) => {
+        if (t._id === activeId) return { ...updatedActiveTask, position: newIndex };
+        if (t.status === sourceStatus) {
+          const found = updatedSource.find((rt) => rt._id === t._id);
+          return found || t;
+        }
+        if (t.status === destStatus) {
+          const found = updatedDestWithPosition.find((rt) => rt._id === t._id);
+          return found || t;
+        }
+        return t;
+      });
+
+      // Re-sort updatedTasks locally based on status and position to ensure correct render order
+      updatedTasks.sort((a, b) => {
+        if (a.position !== b.position) {
+          return a.position - b.position;
+        }
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
+      const updates = [
+        ...updatedSource.map(t => ({ id: t._id, position: t.position, status: sourceStatus })),
+        ...updatedDestWithPosition.map(t => ({ id: t._id, position: t.position, status: destStatus }))
+      ];
+
+      await reorderTasks(updates, updatedTasks);
     }
   };
 
@@ -98,13 +195,13 @@ export default function Dashboard() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 animate-fade-in">
           <div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-text tracking-tight">
-              {greeting}, <span className="bg-gradient-to-r from-[#1E5387] to-[#2E6CA4] bg-clip-text text-transparent">{user?.name?.split(' ')[0]}</span> 👋
+              {greeting}, <span className="bg-gradient-to-r from-[#1E5387] to-[#2E6CA4] bg-clip-text text-transparent">{user?.name?.split(' ')[0]}</span>
             </h2>
             <p className="text-text-secondary text-sm sm:text-base mt-2 font-medium">
               {stats.pending > 0
                 ? `You have ${stats.pending} pending task${stats.pending !== 1 ? 's' : ''} to complete.`
                 : stats.total > 0
-                ? 'All tasks completed — great work! 🎉'
+                ? 'All tasks completed — great work!'
                 : 'No tasks yet. Create one to get started.'}
             </p>
           </div>

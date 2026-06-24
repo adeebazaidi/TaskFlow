@@ -32,6 +32,10 @@ const taskSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    position: {
+      type: Number,
+      default: 0,
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -42,6 +46,7 @@ const taskSchema = new mongoose.Schema(
 );
 
 // Index for faster queries
+taskSchema.index({ userId: 1, position: 1 });
 taskSchema.index({ userId: 1, createdAt: -1 });
 taskSchema.index({ userId: 1, status: 1 });
 

@@ -6,6 +6,7 @@ const {
   updateTask,
   deleteTask,
   toggleTaskStatus,
+  reorderTasks,
 } = require('../controllers/taskController');
 const { protect } = require('../middleware/authMiddleware');
 const { validate } = require('../middleware/validateMiddleware');
@@ -52,6 +53,8 @@ const updateTaskValidation = [
 router.route('/')
   .get(getTasks)
   .post(createTaskValidation, validate, createTask);
+
+router.put('/reorder', reorderTasks);
 
 router.route('/:id')
   .put(updateTaskValidation, validate, updateTask)

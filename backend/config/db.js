@@ -18,10 +18,10 @@ const connectDB = async () => {
       const memUri = mongod.getUri();
 
       await mongoose.connect(memUri);
-      console.log('⚡ MongoDB Memory Server started (dev mode, data is not persisted)');
+      console.log('MongoDB Memory Server started (dev mode, data is not persisted)');
       console.log(`   URI: ${memUri}`);
     } catch (err) {
-      console.error('❌ Failed to start MongoDB Memory Server:', err.message);
+      console.error('Failed to start MongoDB Memory Server:', err.message);
       console.error('   Please set a valid MONGO_URI in backend/.env');
       process.exit(1);
     }
@@ -30,9 +30,9 @@ const connectDB = async () => {
       const conn = await mongoose.connect(uri, {
         serverSelectionTimeoutMS: 10000,
       });
-      console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+      console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
-      console.error(`❌ MongoDB Connection Error: ${error.message}`);
+      console.error(`MongoDB Connection Error: ${error.message}`);
       process.exit(1);
     }
   }

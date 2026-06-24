@@ -4,19 +4,19 @@ export default function StatsCard({ label, value, icon: Icon, color, isCompletio
   // Configs for standard vibrant gradient stats cards
   const configs = {
     coral: { // Card 1: Deep Blue (replacing coral key)
-      card: 'bg-gradient-to-br from-[#1E5387] to-[#153B60] text-white border-transparent shadow-[0_10px_25px_rgba(30,83,135,0.15)] hover:shadow-[0_15px_35px_rgba(30,83,135,0.3)]',
+      card: 'bg-gradient-to-br from-[#1E5387] to-[#153B60] text-white border-transparent shadow-[0_10px_25px_rgba(30,83,135,0.15)]',
       iconWrap: 'bg-white/20 backdrop-blur-md text-white',
       value: 'text-white',
       label: 'text-white/80',
     },
     teal: { // Card 2: Teal/Cyan
-      card: 'bg-gradient-to-br from-[#0C8F8F] to-[#086E6E] text-white border-transparent shadow-[0_10px_25px_rgba(12,143,143,0.15)] hover:shadow-[0_15px_35px_rgba(12,143,143,0.3)]',
+      card: 'bg-gradient-to-br from-[#0C8F8F] to-[#086E6E] text-white border-transparent shadow-[0_10px_25px_rgba(12,143,143,0.15)]',
       iconWrap: 'bg-white/20 backdrop-blur-md text-white',
       value: 'text-white',
       label: 'text-white/80',
     },
     blue: { // Card 3: Dark Navy (replacing blue key)
-      card: 'bg-gradient-to-br from-[#144272] to-[#0E3052] text-white border-transparent shadow-[0_10px_25px_rgba(20,66,114,0.15)] hover:shadow-[0_15px_35px_rgba(20,66,114,0.3)]',
+      card: 'bg-gradient-to-br from-[#144272] to-[#0E3052] text-white border-transparent shadow-[0_10px_25px_rgba(20,66,114,0.15)]',
       iconWrap: 'bg-white/20 backdrop-blur-md text-white',
       value: 'text-white',
       label: 'text-white/80',
@@ -32,7 +32,7 @@ export default function StatsCard({ label, value, icon: Icon, color, isCompletio
     const strokeDashoffset = circumference - (numericValue / 100) * circumference;
 
     return (
-      <div className="bg-card border border-border/80 rounded-[22px] p-4 sm:p-5 shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-all duration-300 flex justify-between gap-4 animate-fade-in relative overflow-hidden group h-[115px] sm:h-[125px]">
+      <div className="bg-card border border-border/80 rounded-[22px] p-4 sm:p-5 shadow-[0_10px_30px_rgba(0,0,0,0.05)] flex justify-between gap-4 animate-fade-in relative overflow-hidden group h-[115px] sm:h-[125px]">
         {/* Left side: Label text (z-10 so it overlays the circle) */}
         <div className="relative z-10 flex flex-col justify-between h-full pointer-events-none">
           <span className="text-xs sm:text-sm font-bold text-text-secondary uppercase tracking-wider block">
@@ -82,7 +82,7 @@ export default function StatsCard({ label, value, icon: Icon, color, isCompletio
   }
 
   return (
-    <div className={`${cfg.card} border rounded-[22px] p-4 sm:p-5 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] animate-fade-in flex flex-col justify-between h-[115px] sm:h-[125px]`}>
+    <div className={`${cfg.card} border rounded-[22px] p-4 sm:p-5 animate-fade-in flex flex-col justify-between h-[115px] sm:h-[125px]`}>
       <div className="flex items-center justify-between">
         <span className={`text-xs sm:text-sm font-semibold uppercase tracking-wider ${cfg.label}`}>{label}</span>
         <div className={`w-8 h-8 ${cfg.iconWrap} rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm`}>

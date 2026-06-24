@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Pencil, Trash2, CheckCircle2, Circle, Calendar, GripVertical } from 'lucide-react';
-import { useDraggable } from '@dnd-kit/core';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const priorityConfig = {
   low:    { label: 'Low',    class: 'badge-low' },
@@ -11,15 +12,23 @@ const priorityConfig = {
 export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
   const [toggling, setToggling] = useState(false);
 
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id: task._id,
     data: { task },
   });
 
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    zIndex: 50,
-  } : undefined;
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition: isDragging ? 'none' : transition || undefined,
+    zIndex: isDragging ? 50 : undefined,
+  };
 
   const handleToggle = async (e) => {
     e.stopPropagation(); // Avoid triggering drag
@@ -72,7 +81,7 @@ export default function TaskCard({ task, onEdit, onDelete, onToggle }) {
         <div
           {...attributes}
           {...listeners}
-          className="flex-shrink-0 text-text-secondary/40 hover:text-[#1E5387] cursor-grab active:cursor-grabbing outline-none transition-colors duration-200"
+          className="flex-shrink-0 text-text-secondary/70 dark:text-text-secondary/80 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 p-1.5 rounded-lg cursor-grab active:cursor-grabbing outline-none transition-all duration-200"
           title="Drag to reorder"
         >
           <GripVertical size={16} className="stroke-[2.5]" />

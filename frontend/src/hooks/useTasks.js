@@ -98,33 +98,91 @@ export const useTasks = () => {
   }, [tasks]);
 
   const toggleStatus = useCallback(async (id) => {
+    let originalTask;
+    let originalStatus;
+    let newStatus;
+
+    // 1. Optimistically update tasks list
+    setTasks((prev) => {
+      originalTask = prev.find((t) => t._id === id);
+      if (!originalTask) return prev;
+      originalStatus = originalTask.status;
+      newStatus = originalStatus === 'pending' ? 'completed' : 'pending';
+      return prev.map((t) => (t._id === id ? { ...t, status: newStatus } : t));
+    });
+
+    // If task is not found, do nothing
+    if (!originalStatus) return;
+
+    // 2. Optimistically update stats
+    setStats((s) => {
+      if (newStatus === 'completed') {
+        return {
+          ...s,
+          pending: Math.max(0, s.pending - 1),
+          completed: s.completed + 1,
+        };
+      } else {
+        return {
+          ...s,
+          pending: s.pending + 1,
+          completed: Math.max(0, s.completed - 1),
+        };
+      }
+    });
+
     try {
       const res = await taskService.toggleStatus(id);
+      // Synchronize with server response
       const updatedTask = res.data.task;
       setTasks((prev) => prev.map((t) => (t._id === id ? updatedTask : t)));
-
-      // Update stats optimistically based on the new status (F3)
-      setStats((s) => {
-        if (updatedTask.status === 'completed') {
-          // Was pending, now completed
-          return {
-            ...s,
-            pending: Math.max(0, s.pending - 1),
-            completed: s.completed + 1,
-          };
-        } else {
-          // Was completed, now pending
-          return {
-            ...s,
-            pending: s.pending + 1,
-            completed: Math.max(0, s.completed - 1),
-          };
-        }
-      });
     } catch (err) {
+      // Revert states on error
       toast.error(err.message || 'Failed to update status');
+      if (originalTask) {
+        setTasks((prev) => prev.map((t) => (t._id === id ? originalTask : t)));
+        setStats((s) => {
+          if (originalStatus === 'completed') {
+            return {
+              ...s,
+              pending: Math.max(0, s.pending - 1),
+              completed: s.completed + 1,
+            };
+          } else {
+            return {
+              ...s,
+              pending: s.pending + 1,
+              completed: Math.max(0, s.completed - 1),
+            };
+          }
+        });
+      }
     }
   }, []);
+
+  const reorderTasks = useCallback(async (updates, optimisticallyUpdatedTasks) => {
+    const originalTasks = tasks;
+    const originalStats = stats;
+
+    if (optimisticallyUpdatedTasks) {
+      setTasks(optimisticallyUpdatedTasks);
+      const pending = optimisticallyUpdatedTasks.filter(t => t.status === 'pending').length;
+      const completed = optimisticallyUpdatedTasks.filter(t => t.status === 'completed').length;
+      setStats({
+        total: optimisticallyUpdatedTasks.length,
+        pending,
+        completed
+      });
+    }
+
+    try {
+      await taskService.reorderTasks(updates);
+    } catch (err) {
+      toast.error(err.message || 'Failed to save task order');
+      setTasks(originalTasks);
+      setStats(originalStats);
+    }
+  }, [tasks, stats]);
 
   return {
     tasks,
@@ -138,5 +196,6 @@ export const useTasks = () => {
     updateTask,
     deleteTask,
     toggleStatus,
+    reorderTasks,
   };
 };

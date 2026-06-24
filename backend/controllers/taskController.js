@@ -5,6 +5,7 @@ const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Allowed sort field whitelist to prevent injection (B2)
 const ALLOWED_SORTS = {
+  'custom': { position: 1, createdAt: -1 },
   '-createdAt': { createdAt: -1 },
   'createdAt': { createdAt: 1 },
   '-updatedAt': { updatedAt: -1 },
@@ -41,7 +42,7 @@ const getTasks = async (req, res) => {
     }
 
     // Sanitize sort param — fall back to default if invalid (B2)
-    const sortQuery = ALLOWED_SORTS[sort] || { createdAt: -1 };
+    const sortQuery = ALLOWED_SORTS[sort] || { position: 1, createdAt: -1 };
 
     // Run tasks query and global stats in parallel (B1 — 2 queries instead of 3)
     const [tasks, statsResult] = await Promise.all([
@@ -174,4 +175,33 @@ const toggleTaskStatus = async (req, res) => {
   }
 };
 
-module.exports = { getTasks, createTask, updateTask, deleteTask, toggleTaskStatus };
+// @desc    Bulk reorder tasks (update status and position)
+// @route   PUT /api/tasks/reorder
+// @access  Private
+const reorderTasks = async (req, res) => {
+  try {
+    const { updates } = req.body;
+    if (!Array.isArray(updates)) {
+      return res.status(400).json({ success: false, message: 'updates must be an array' });
+    }
+
+    const bulkOps = updates.map((update) => ({
+      updateOne: {
+        filter: { _id: update.id, userId: req.user._id },
+        update: { $set: { position: update.position, status: update.status } },
+      }
+    }));
+
+    await Task.bulkWrite(bulkOps);
+
+    res.status(200).json({
+      success: true,
+      message: 'Tasks reordered successfully',
+    });
+  } catch (error) {
+    console.error('Reorder error:', error);
+    res.status(500).json({ success: false, message: 'Failed to reorder tasks.' });
+  }
+};
+
+module.exports = { getTasks, createTask, updateTask, deleteTask, toggleTaskStatus, reorderTasks };

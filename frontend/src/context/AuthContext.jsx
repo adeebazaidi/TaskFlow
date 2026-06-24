@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     setAuthToken(token);
     setUser(user);
 
-    toast.success(`Welcome back, ${user.name}! 👋`);
+    toast.success(`Welcome back, ${user.name}!`);
     return res.data;
   }, []);
 
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
     setAuthToken(token);
     setUser(user);
 
-    toast.success(`Account created! Welcome, ${user.name}! 🎉`);
+    toast.success(`Account created! Welcome, ${user.name}!`);
     return res.data;
   }, []);
 

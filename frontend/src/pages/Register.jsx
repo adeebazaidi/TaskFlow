@@ -80,7 +80,6 @@ export default function Register() {
         <div className="glass-card p-8 border border-border/80 shadow-2xl">
           {serverError && (
             <div className="mb-5 px-4 py-3 bg-rose-50 dark:bg-rose-950/20 border border-rose-200/50 dark:border-rose-900/50 rounded-2xl text-rose-600 dark:text-rose-400 text-xs font-bold animate-fade-in flex items-start gap-2">
-              <span className="mt-0.5">⚠️</span>
               <span>{serverError}</span>
             </div>
           )}
